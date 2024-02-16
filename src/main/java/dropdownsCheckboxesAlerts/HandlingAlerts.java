@@ -1,3 +1,5 @@
+package dropdownsCheckboxesAlerts;
+
 import org.testng.annotations.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -18,5 +20,6 @@ public class HandlingAlerts {
         System.out.println(driver.switchTo().alert().getText());
 
         driver.switchTo().alert().dismiss();
+        driver.quit();
     }
 }
