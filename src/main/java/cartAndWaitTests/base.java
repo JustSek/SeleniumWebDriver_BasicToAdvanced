@@ -1,15 +1,18 @@
-package cartTests;
+package cartAndWaitTests;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class base {
 
@@ -18,15 +21,23 @@ public class base {
         WebDriver driver = new ChromeDriver();
         driver.get("https://rahulshettyacademy.com/seleniumPractise/");
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        //Implicit wait, will apply to whole test, for all find elements
+        //driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
+        //Explicit wait will apply only to one element
+        WebDriverWait w = new WebDriverWait(driver, Duration.of(5, ChronoUnit.SECONDS));
 
         String[] vegetables = {"Cucumber", "Brocolli", "Beetroot"};
         addItems(driver, vegetables);
         driver.findElement(By.xpath("//img[@alt='Cart']")).click();
         driver.findElement(By.xpath("//button[contains(text(), 'PROCEED TO CHECKOUT')]")).click();
+
+        w.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input.promoCode")));
         driver.findElement(By.cssSelector("input.promoCode")).sendKeys("rahulshettyacademy");
+
         driver.findElement(By.xpath("//button[@class='promoBtn']")).click();
-        //driver.findElement(By.cssSelector("span.promoInfo")).getText();
+        w.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("span.promoInfo")));
         Assert.assertEquals(driver.findElement(By.cssSelector("span.promoInfo")).getText(), "Code applied ..!");
         driver.quit();
     }
